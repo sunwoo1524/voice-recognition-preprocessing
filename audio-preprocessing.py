@@ -3,7 +3,6 @@ import librosa.display
 import numpy as np
 import sounddevice as sd
 
-sr = 22050
 
 # print("녹음이 시작되었습니다.\nEnter 키를 눌러 녹음을 종료하세요.")
 
@@ -25,12 +24,15 @@ sr = 22050
 
 # audio_data = np.concatenate(recorded_data, axis=0).flatten()
 
-DURATION = 5 # record for 5 sec
+sr = 22050
+n_fft = 2048
+hop_length = 512
+DURATION = 216 # record for 216 frame (about 5 sec)
 
 print(f"녹음 중...")
-recording = sd.rec(int(DURATION * sr), samplerate=sr, channels=1)
+recording = sd.rec(int((DURATION - 1) * (hop_length / sr) * sr), samplerate=sr, channels=1)
 sd.wait()
-print("녹음이 종료되었습니다!")
+print(f"약 {(DURATION - 1) * (hop_length / sr)}초 간 녹음함")
 
 # convert to 1d array
 audio_data = recording.flatten()
@@ -39,7 +41,7 @@ audio_data = recording.flatten()
 mel_spectrogram = librosa.feature.melspectrogram(
     y=audio_data,
     sr=sr,
-    n_fft=2048,
+    n_fft=n_fft,
     hop_length=512,
     n_mels=128,
     fmax=8000
