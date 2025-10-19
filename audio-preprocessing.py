@@ -5,39 +5,8 @@ import sounddevice as sd
 import threading
 
 sr = 22050
-recorded_data = []
-is_recording = False
 
-# def record_audio():
-#     global recorded_data, is_recording
-    
-#     def callback(indata, frames, time, status):
-#         if status:
-#             print(f"상태: {status}")
-#         if is_recording:
-#             recorded_data.append(indata.copy())
-    
-#     with sd.InputStream(samplerate=sr, channels=1, callback=callback):
-#         while is_recording:
-#             sd.sleep(100)
-
-# print("녹음 중...")
-# print("엔터 키로 녹음 종료")
-
-# is_recording = True
-# recorded_data = []
-
-# record_thread = threading.Thread(target=record_audio)
-# record_thread.start()
-
-# is_recording = False
-# record_thread.join()
-
-# print("녹음 종료")
-
-
-
-print("Enter 키를 누르면 녹음이 종료됩니다.")
+print("녹음이 시작되었습니다.\nEnter 키를 눌러 녹음을 종료하세요.")
 
 recorded_data = []
 
@@ -46,11 +15,10 @@ def callback(indata, frames, time, status):
         print(f"상태: {status}")
     recorded_data.append(indata.copy())
 
-# 스트림 생성 (논블로킹 모드)
 stream = sd.InputStream(samplerate=sr, channels=1, callback=callback, blocksize=1024)
 
 stream.start()
-input()  # Enter 입력 대기
+input()
 stream.stop()
 stream.close()
 
